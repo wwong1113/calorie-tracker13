@@ -1,0 +1,45 @@
+import React, { useState } from "react";
+
+function SearchPage() {
+  const foods = [
+    { name: "Apple", calories: 95, protein: 0.5, carbs: 25, fat: 0.3 },
+    { name: "Banana", calories: 105, protein: 1.3, carbs: 27, fat: 0.4 },
+    { name: "Orange", calories: 62, protein: 1.2, carbs: 15, fat: 0.2 },
+    {
+      name: "Chicken Breast (100g)",
+      calories: 165,
+      protein: 31,
+      carbs: 0,
+      fat: 3.6,
+    },
+  ];
+  const [food, setFood] = useState("");
+
+  const handleSubmit = () => {
+    console.log(food);
+  };
+  return (
+    <div className="search">
+      <input
+        type="text"
+        value={food}
+        placeholder="Search for foods"
+        onSubmit={handleSubmit}
+        onChange={(event) => setFood(event.target.value)}
+      ></input>
+      <div>
+        {foods.map((food, index) => (
+          <div key={index}>
+            <h3>{food.name}</h3>
+            <p>Calories: {food.calories}</p>
+            <p>Protein: {food.protein}g</p>
+            <p>Carbs: {food.carbs}g</p>
+            <p>Fat: {food.fat}g</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default SearchPage;
