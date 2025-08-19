@@ -4,6 +4,7 @@ import Header from "./Components/Header";
 import HomePage from "./Pages/HomePage";
 import LoginPage from "./Pages/LoginPage";
 import SearchPage from "./Pages/SearchPage";
+import CreateMealPage from "./Pages/CreateMealPage";
 function App() {
   return (
     <BrowserRouter>
@@ -33,6 +34,15 @@ function App() {
               <>
                 <Header />
                 <LoginPage />
+              </>
+            }
+          />
+          <Route
+            path="/createMeal"
+            element={
+              <>
+                <Header />
+                <CreateMealPage />
               </>
             }
           />

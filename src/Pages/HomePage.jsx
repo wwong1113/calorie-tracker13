@@ -23,7 +23,18 @@ function HomePage() {
         </div>
       </div>
       <div>
-        <div>Set Goals</div>
+        <h2>Other Actions</h2>
+        <div className="set-actions">
+          <div className="adjust-goals">
+            <h2>Adjust Goals</h2>
+          </div>
+          <div className="create-meal">
+            <h2>Create Meal</h2>
+          </div>
+          <div className="streak">
+            <h2>Streak</h2>
+          </div>
+        </div>
       </div>
     </div>
   );

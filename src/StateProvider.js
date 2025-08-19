@@ -1,8 +1,15 @@
-export const StateProvider = useContext();
+import React, { createContext, useContext, useReducer } from "react";
 
-export const initialState = {
-  user: null,
-  calorie_goal: 0,
-  protien_goal: 0,
-  fat_goal: 0,
+export const StateContext = createContext();
+
+export const StateProvider = ({ reducer, initialState, children }) => {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  return React.createElement(
+    StateContext.Provider,
+    { value: [state, dispatch] },
+    children
+  );
 };
+
+export const useStateValue = () => useContext(StateContext);
