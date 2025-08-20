@@ -23,7 +23,7 @@ function CreateMealPage() {
       </form>
       <div className="listOfMeals">
         <h2>List Of Meals</h2>
-        <Meal></Meal>
+        <Meal Name={"Test"} Ingridients={[]}></Meal>
         <div>Map of Meals</div>
       </div>
     </div>

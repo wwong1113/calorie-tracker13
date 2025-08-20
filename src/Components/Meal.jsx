@@ -1,10 +1,10 @@
 import React from "react";
 
-function Meal() {
+function Meal({ Name, Ingridients }) {
   return (
     <div className="meal">
       <div className="inforamation">
-        {"Name Of Meal"}
+        {Name}
         {"Macro Nutrients"}
         {"Ingredients"}
         {""}

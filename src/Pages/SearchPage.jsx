@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-
+import "../CSS/SearchPage.CSS";
 function SearchPage() {
+  const API_KEY = "f98bc22a54084cf492be39de62873486";
   const foods = [
     { name: "Apple", calories: 95, protein: 0.5, carbs: 25, fat: 0.3 },
     { name: "Banana", calories: 105, protein: 1.3, carbs: 27, fat: 0.4 },
@@ -15,18 +16,22 @@ function SearchPage() {
   ];
   const [food, setFood] = useState("");
 
-  const handleSubmit = () => {
+  const handleSubmit = (event) => {
+    event.preventDefault();
     console.log(food);
   };
   return (
     <div className="search">
-      <input
-        type="text"
-        value={food}
-        placeholder="Search for foods"
-        onSubmit={handleSubmit}
-        onChange={(event) => setFood(event.target.value)}
-      ></input>
+      <form onSubmit={handleSubmit} className="search-form">
+        <input
+          type="text"
+          value={food}
+          placeholder="Search for foods"
+          onChange={(event) => setFood(event.target.value)}
+          className="search-input"
+        ></input>
+      </form>
+
       <div>
         {foods.map((food, index) => (
           <div key={index}>

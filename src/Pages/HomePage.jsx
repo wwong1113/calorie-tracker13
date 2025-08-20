@@ -31,8 +31,8 @@ function HomePage() {
           <div className="create-meal">
             <h2>Create Meal</h2>
           </div>
-          <div className="streak">
-            <h2>Streak</h2>
+          <div className="track-calories">
+            <h2>Track Calories</h2>
           </div>
         </div>
       </div>
