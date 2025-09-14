@@ -1,48 +1,94 @@
 import React, { useState } from "react";
 import "../CSS/SearchPage.CSS";
+
 function SearchPage() {
   const API_KEY = "f98bc22a54084cf492be39de62873486";
-  const foods = [
-    { name: "Apple", calories: 95, protein: 0.5, carbs: 25, fat: 0.3 },
-    { name: "Banana", calories: 105, protein: 1.3, carbs: 27, fat: 0.4 },
-    { name: "Orange", calories: 62, protein: 1.2, carbs: 15, fat: 0.2 },
-    {
-      name: "Chicken Breast (100g)",
-      calories: 165,
-      protein: 31,
-      carbs: 0,
-      fat: 3.6,
-    },
-  ];
-  const [food, setFood] = useState("");
 
-  const handleSubmit = (event) => {
+  const [query, setQuery] = useState(""); // search input
+  const [foodInfo, setFoodInfo] = useState(null); // API response
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(food);
+
+    try {
+      const searchRes = await fetch(
+        `https://api.spoonacular.com/food/ingredients/search?query=${query}&number=1&apiKey=${API_KEY}`
+      );
+      const searchData = await searchRes.json();
+
+      if (!searchData.results || searchData.results.length === 0) {
+        console.log("No results found");
+        return;
+      }
+
+      const ingredientId = searchData.results[0].id;
+
+      const infoRes = await fetch(
+        `https://api.spoonacular.com/food/ingredients/${ingredientId}/information?amount=100&unit=grams&apiKey=${API_KEY}`
+      );
+      const infoData = await infoRes.json();
+
+      setFoodInfo(infoData);
+      console.log(infoData);
+    } catch (err) {
+      console.log(err);
+    }
   };
+
   return (
     <div className="search">
       <form onSubmit={handleSubmit} className="search-form">
         <input
           type="text"
-          value={food}
+          value={query}
           placeholder="Search for foods"
-          onChange={(event) => setFood(event.target.value)}
+          onChange={(event) => setQuery(event.target.value)}
           className="search-input"
-        ></input>
+        />
       </form>
 
-      <div>
-        {foods.map((food, index) => (
-          <div key={index}>
-            <h3>{food.name}</h3>
-            <p>Calories: {food.calories}</p>
-            <p>Protein: {food.protein}g</p>
-            <p>Carbs: {food.carbs}g</p>
-            <p>Fat: {food.fat}g</p>
-          </div>
-        ))}
-      </div>
+      {foodInfo && (
+        <div className="foodCard">
+          <h3>{foodInfo.name}</h3>
+          {foodInfo.image && (
+            <img
+              src={`https://spoonacular.com/cdn/ingredients_250x250/${foodInfo.image}`}
+              alt={foodInfo.name}
+              className="food-image"
+            />
+          )}
+          <p>
+            <strong>Calories:</strong>{" "}
+            {
+              foodInfo.nutrition.nutrients.find((n) => n.name === "Calories")
+                ?.amount
+            }{" "}
+            kcal
+          </p>
+          <p>
+            <strong>Protein:</strong>{" "}
+            {
+              foodInfo.nutrition.nutrients.find((n) => n.name === "Protein")
+                ?.amount
+            }{" "}
+            g
+          </p>
+          <p>
+            <strong>Carbs:</strong>{" "}
+            {
+              foodInfo.nutrition.nutrients.find(
+                (n) => n.name === "Carbohydrates"
+              )?.amount
+            }{" "}
+            g
+          </p>
+          <p>
+            <strong>Fat:</strong>{" "}
+            {foodInfo.nutrition.nutrients.find((n) => n.name === "Fat")?.amount}{" "}
+            g
+          </p>
+        </div>
+      )}
     </div>
   );
 }

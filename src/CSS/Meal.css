@@ -1,0 +1,26 @@
+.meal {
+  display: flex;
+  border-radius: 5px;
+  border: 2px solid black;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  background-color: #fff8f5; /* very light warm background */
+}
+.information {
+  display: flex;
+  flex-direction: column;
+  margin: 25px;
+  border-radius: 5px;
+  padding: 5px;
+  border: 2px solid blue;
+}
+.ingredients {
+  display: flex;
+  flex-direction: column;
+  margin: 25px;
+  border-radius: 5px;
+  padding: 5px;
+  border: 2px solid blue;
+}
+.nutrients {
+}

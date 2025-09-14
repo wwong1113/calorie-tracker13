@@ -9,5 +9,7 @@ export const reducer = (state, action) => {
   switch (action.type) {
     default:
       return state;
+    case "ADD_MEAL":
+      return state;
   }
 };

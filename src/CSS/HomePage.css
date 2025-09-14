@@ -64,7 +64,7 @@
 }
 .adjust-goals,
 .create-meal,
-.streak {
+.track-calories {
   background-color: white;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
@@ -84,7 +84,7 @@
 
 .adjust-goals h2,
 .create-meal h2,
-.streak h2 {
+.track-calories h2 {
   font-size: 1.3rem;
   color: #ff6f61;
   margin-bottom: 12px;
@@ -96,4 +96,11 @@
   font-weight: 700;
   font-size: 1.5rem;
   color: #444;
+}
+.create-meal {
+  cursor: pointer;
+  user-select: none;
+}
+.create-meal:hover {
+  background-color: rgba(255, 255, 255, 0.25);
 }

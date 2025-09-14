@@ -1,7 +1,12 @@
 import React, { useContext } from "react";
 import "../CSS/HomePage.css";
+import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 function HomePage() {
+  const navigate = useNavigate();
+  const handleSubmit = (path) => {
+    navigate(path);
+  };
   return (
     <div className="homepage">
       <h2>Macros</h2>
@@ -28,7 +33,10 @@ function HomePage() {
           <div className="adjust-goals">
             <h2>Adjust Goals</h2>
           </div>
-          <div className="create-meal">
+          <div
+            className="create-meal"
+            onClick={() => handleSubmit("/createMeal")}
+          >
             <h2>Create Meal</h2>
           </div>
           <div className="track-calories">

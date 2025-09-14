@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import Meal from "../Components/Meal";
-
+import "../CSS/CreateMeal.css";
 function CreateMealPage() {
   const [food, setFood] = useState("");
 
@@ -8,7 +8,7 @@ function CreateMealPage() {
     console.log(food);
   };
   return (
-    <div>
+    <div className="CreateMealPage">
       <form>
         <input
           type="text"
@@ -23,8 +23,7 @@ function CreateMealPage() {
       </form>
       <div className="listOfMeals">
         <h2>List Of Meals</h2>
-        <Meal Name={"Test"} Ingridients={[]}></Meal>
-        <div>Map of Meals</div>
+        <Meal Name={"Egg Fried Rice"} Ingredients={[333, 111]}></Meal>
       </div>
     </div>
   );
