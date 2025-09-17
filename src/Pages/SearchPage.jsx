@@ -6,7 +6,7 @@ function SearchPage() {
 
   const [query, setQuery] = useState(""); // search input
   const [foodInfo, setFoodInfo] = useState(null); // API response
-
+  const addToMeal = () => {};
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -87,6 +87,9 @@ function SearchPage() {
             {foodInfo.nutrition.nutrients.find((n) => n.name === "Fat")?.amount}{" "}
             g
           </p>
+          <form className="addToMeal" onSubmit={addToMeal}>
+            <button type="submit">Add To Meal</button>
+          </form>
         </div>
       )}
     </div>
