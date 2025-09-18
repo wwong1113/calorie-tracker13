@@ -6,7 +6,9 @@ function SearchPage() {
 
   const [query, setQuery] = useState(""); // search input
   const [foodInfo, setFoodInfo] = useState(null); // API response
-  const addToMeal = () => {};
+  const addToMeal = () => {
+    console.log("poo");
+  };
   const handleSubmit = async (event) => {
     event.preventDefault();
 
