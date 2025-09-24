@@ -29,5 +29,13 @@ export const reducer = (state, action) => {
       return {
         ...state,
       };
+      return state;
+    case "CHANGE_GOALS":
+      return {
+        ...state,
+        calorie_goal: action.payload.calorie_goal ?? state.calorie_goal,
+        protein_goal: action.payload.protein_goal ?? state.protein_goal,
+        fat_goal: action.payload.fat_goal ?? state.fat_goal,
+      };
   }
 };

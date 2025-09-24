@@ -2,8 +2,10 @@ import React, { useContext } from "react";
 import "../CSS/HomePage.css";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
+import { StateContext } from "../StateProvider";
 function HomePage() {
   const navigate = useNavigate();
+  const { state, updateState } = useContext(StateContext);
   const handleSubmit = (path) => {
     navigate(path);
   };
