@@ -1,6 +1,8 @@
 export const initialState = {
   user: null,
   Meals: [],
+  Favourites: [],
+
   calorie_goal: 0,
   protein_goal: 0,
   fat_goal: 0,
@@ -14,6 +16,14 @@ export const reducer = (state, action) => {
     default:
       return state;
     case "ADD_MEAL":
-      return state;
+      return {
+        ...state,
+        Meals: [...state.Meals, action.payload],
+      };
+    case "ADD_FAVOURITES":
+      return {
+        ...state,
+        Favouirtes: [...state.Favouirtes, action.payload],
+      };
   }
 };
