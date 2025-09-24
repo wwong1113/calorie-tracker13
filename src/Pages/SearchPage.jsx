@@ -4,8 +4,8 @@ import "../CSS/SearchPage.CSS";
 function SearchPage() {
   const API_KEY = import.meta.env.VITE_FOOD_API_KEY;
 
-  const [query, setQuery] = useState(""); // search input
-  const [foodInfo, setFoodInfo] = useState(null); // API response
+  const [query, setQuery] = useState("");
+  const [foodInfo, setFoodInfo] = useState(null);
   const addToMeal = () => {
     console.log("poo");
     dispatch({ type: "ADD_TO_MEAL" });
