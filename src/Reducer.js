@@ -25,5 +25,9 @@ export const reducer = (state, action) => {
         ...state,
         Favouirtes: [...state.Favouirtes, action.payload],
       };
+    case "ADD_TO_MEAL":
+      return {
+        ...state,
+      };
   }
 };

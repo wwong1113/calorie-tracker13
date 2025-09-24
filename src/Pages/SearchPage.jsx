@@ -8,6 +8,7 @@ function SearchPage() {
   const [foodInfo, setFoodInfo] = useState(null); // API response
   const addToMeal = () => {
     console.log("poo");
+    dispatch({ type: "ADD_TO_MEAL" });
   };
   const handleSubmit = async (event) => {
     event.preventDefault();
