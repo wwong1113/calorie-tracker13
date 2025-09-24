@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "../CSS/SearchPage.CSS";
 
 function SearchPage() {
-  const API_KEY = "f98bc22a54084cf492be39de62873486";
+  const API_KEY = import.meta.env.VITE_FOOD_API_KEY;
 
   const [query, setQuery] = useState(""); // search input
   const [foodInfo, setFoodInfo] = useState(null); // API response
