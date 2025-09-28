@@ -23,7 +23,7 @@ export const reducer = (state, action) => {
     case "ADD_FAVOURITES":
       return {
         ...state,
-        Favouirtes: [...state.Favouirtes, action.payload],
+        Favourites: [...state.Favourites, action.payload],
       };
     case "ADD_TO_MEAL":
       return {

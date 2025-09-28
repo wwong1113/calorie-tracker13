@@ -1,18 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useReducer } from "react";
 import "../CSS/SearchPage.CSS";
-
+import { reducer, initialState } from "../Reducer.js";
 function SearchPage() {
   const API_KEY = import.meta.env.VITE_FOOD_API_KEY;
-
+  const [state, dispatch] = useReducer(reducer, initialState);
   const [query, setQuery] = useState("");
   const [foodInfo, setFoodInfo] = useState(null);
-  const addToMeal = () => {
-    console.log("poo");
-    dispatch({ type: "ADD_TO_MEAL" });
+
+  const addToFavourites = (event) => {
+    event.preventDefault();
+    dispatch({
+      type: "ADD_FAVOURITES",
+      payload: foodInfo,
+    });
   };
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     try {
       const searchRes = await fetch(
         `https://api.spoonacular.com/food/ingredients/search?query=${query}&number=1&apiKey=${API_KEY}`
@@ -90,8 +93,8 @@ function SearchPage() {
             {foodInfo.nutrition.nutrients.find((n) => n.name === "Fat")?.amount}{" "}
             g
           </p>
-          <form className="addToMeal" onSubmit={addToMeal}>
-            <button type="submit">Add To Meal</button>
+          <form className="addToMeal" onSubmit={addToFavourites}>
+            <button type="submit">Add To Favourites</button>
           </form>
         </div>
       )}
