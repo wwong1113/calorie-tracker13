@@ -78,7 +78,9 @@
 
 .calorie-goal:hover,
 .protein-intake:hover,
-.fat-intake:hover {
+.fat-intake:hover,
+.create-meal:hover,
+.adjust-goals:hover {
   box-shadow: 0 6px 15px rgba(255, 111, 97, 0.4); /* accent shadow on hover */
 }
 
@@ -97,10 +99,12 @@
   font-size: 1.5rem;
   color: #444;
 }
-.create-meal {
+.create-meal,
+.adjust-goals {
   cursor: pointer;
   user-select: none;
 }
-.create-meal:hover {
+.create-meal:hover,
+.adjust-goals:hover {
   background-color: rgba(255, 255, 255, 0.25);
 }

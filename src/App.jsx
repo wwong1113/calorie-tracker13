@@ -46,6 +46,14 @@ function App() {
               </>
             }
           />
+          <Route
+            path="/adjustGoals"
+            element={
+              <>
+                <Header />
+              </>
+            }
+          />
         </Routes>
       </div>
     </BrowserRouter>

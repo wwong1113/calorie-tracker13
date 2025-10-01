@@ -1,6 +1,7 @@
 import React, { useState, useReducer } from "react";
 import "../CSS/SearchPage.CSS";
 import { reducer, initialState } from "../Reducer.js";
+import { StateContext } from "../StateProvider";
 function SearchPage() {
   const API_KEY = import.meta.env.VITE_FOOD_API_KEY;
   const [state, dispatch] = useReducer(reducer, initialState);

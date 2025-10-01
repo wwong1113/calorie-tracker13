@@ -1,9 +1,10 @@
 import React, { useState, useContext } from "react";
+import { reducer, initialState } from "../Reducer.js";
 import Meal from "../Components/Meal";
 import "../CSS/CreateMeal.css";
 function CreateMealPage() {
   const [food, setFood] = useState("");
-
+  const createMeal = () => {};
   const handleSubmit = () => {
     console.log(food);
   };

@@ -32,7 +32,10 @@ function HomePage() {
       <div>
         <h2>Other Actions</h2>
         <div className="set-actions">
-          <div className="adjust-goals">
+          <div
+            className="adjust-goals"
+            onClick={() => handleSubmit("/adjustGoals")}
+          >
             <h2>Adjust Goals</h2>
           </div>
           <div
