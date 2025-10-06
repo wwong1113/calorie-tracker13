@@ -5,6 +5,7 @@ import HomePage from "./Pages/HomePage";
 import LoginPage from "./Pages/LoginPage";
 import SearchPage from "./Pages/SearchPage";
 import CreateMealPage from "./Pages/CreateMealPage";
+import AdjustGoalsPage from "./Pages/AdjustGoalsPage";
 function App() {
   return (
     <BrowserRouter>
@@ -51,6 +52,7 @@ function App() {
             element={
               <>
                 <Header />
+                <AdjustGoalsPage />
               </>
             }
           />
