@@ -10,14 +10,18 @@ function AdjustGoalsPage() {
   const [protein, setProtein] = useState(0);
   const changeGoals = (event) => {
     event.preventDefault();
-    dispatch({});
+    dispatch({ type: "ADJUST_GOALS" });
   };
   return (
     <div className="adjust-goals-page">
       <div className="goal-adjustment">
         <div className="adjust-calories">
           Adjust Calories
-          <input placeholder="Enter new goal" value={calories}></input>
+          <input
+            placeholder="Enter new goal"
+            value={calories}
+            onChange={(e) => setCalories(Number(e.target.value))}
+          ></input>
           <button>Confirm</button>
         </div>
         <div className="adjust-protein">
