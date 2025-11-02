@@ -2,13 +2,15 @@ import React, { useContext } from "react";
 import "../CSS/HomePage.css";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
-import { StateContext } from "../StateProvider";
+import { useStateValue } from "../StateProvider";
+
 function HomePage() {
   const navigate = useNavigate();
-  const { state, updateState } = useContext(StateContext);
+  const [{ calorie_goal, protein_goal, fat_goal, dailyLog }] = useStateValue();
   const handleSubmit = (path) => {
     navigate(path);
   };
+
   return (
     <div className="homepage">
       <h2>Macros</h2>
@@ -16,17 +18,23 @@ function HomePage() {
         <div className="calorie-goal">
           <h2>Calorie Goal</h2>
           <CircularProgress variant="determinate" value={25} />
-          <div className="calorie-intake">800cal/1600cal</div>
+          <div className="calorie-intake">
+            {dailyLog.totals.calories}cal/{calorie_goal}cal
+          </div>
         </div>
         <div className="protein-intake">
           <h2>Protein Intake</h2>
           <CircularProgress variant="determinate" value={50} />
-          <div className="protein-total">89g/120g</div>
+          <div className="protein-total">
+            {dailyLog.totals.calories}g/{protein_goal}g
+          </div>
         </div>
         <div className="fat-intake">
           <h2>Fat Intake</h2>
           <CircularProgress variant="determinate" value={75} />
-          <div className="fat-total">50g/100g</div>
+          <div className="fat-total">
+            {dailyLog.totals.calories}g/{fat_goal}g
+          </div>
         </div>
       </div>
       <div>

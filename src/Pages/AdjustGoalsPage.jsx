@@ -1,46 +1,57 @@
-import React, { useState, useContext, useReducer } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 import "../CSS/AdjustGoalsPage.css";
-import { reducer, initialState } from "../Reducer";
+import { useStateValue } from "../StateProvider";
+
 function AdjustGoalsPage() {
-  const [query, setQuery] = useState(0);
-  const [state, intialState] = useReducer(reducer, initialState);
-  const [calories, setCalories] = useState(0);
-  const [fats, setFats] = useState(0);
-  const [protein, setProtein] = useState(0);
-  const changeGoals = (event) => {
-    event.preventDefault();
-    dispatch({ type: "ADJUST_GOALS" });
+  const [{ calorie_goal, protein_goal, fat_goal }, dispatch] = useStateValue();
+
+  const [calories, setCalories] = useState(calorie_goal);
+  const [protein, setProtein] = useState(protein_goal);
+  const [fats, setFats] = useState(fat_goal);
+
+  const handleConfirm = (type) => {
+    let newGoals = {};
+    if (type === "calories") newGoals = { calorie_goal: calories };
+    if (type === "protein") newGoals = { protein_goal: protein };
+    if (type === "fats") newGoals = { fat_goal: fats };
+
+    dispatch({
+      type: "CHANGE_GOALS",
+      payload: newGoals,
+    });
   };
+
   return (
     <div className="adjust-goals-page">
       <div className="goal-adjustment">
         <div className="adjust-calories">
-          Adjust Calories
+          <h3>Adjust Calories</h3>
           <input
+            type="text"
             placeholder="Enter new goal"
-            value={calories}
             onChange={(e) => setCalories(Number(e.target.value))}
-          ></input>
-          <button>Confirm</button>
+          />
+          <button onClick={() => handleConfirm("calories")}>Confirm</button>
         </div>
+
         <div className="adjust-protein">
-          Adjust Protein
+          <h3>Adjust Protein</h3>
           <input
+            type="text"
             placeholder="Enter new goal"
-            value={protein}
             onChange={(e) => setProtein(Number(e.target.value))}
-          ></input>
-          <button>Confirm</button>
+          />
+          <button onClick={() => handleConfirm("protein")}>Confirm</button>
         </div>
+
         <div className="adjust-fats">
-          Adjust Fats
+          <h3>Adjust Fats</h3>
           <input
+            type="text"
             placeholder="Enter new goal"
-            value={fats}
             onChange={(e) => setFats(Number(e.target.value))}
-          ></input>
-          <button>Confirm</button>
+          />
+          <button onClick={() => handleConfirm("fats")}>Confirm</button>
         </div>
       </div>
     </div>
