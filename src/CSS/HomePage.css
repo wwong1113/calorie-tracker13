@@ -1,110 +1,142 @@
-/* HomePage.css */
-
+/* Base layout */
 .homepage {
-  padding: 24px;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  color: #333;
-  background-color: #fff8f5; /* very light warm background */
+  font-family: "Inter", "SF Pro Display", sans-serif;
+  background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
   min-height: 100vh;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.homepage h2 {
+/* Page title */
+.homepage-title {
+  font-size: 2rem;
   font-weight: 700;
-  color: #ff6f61; /* same warm accent color */
-  margin-bottom: 24px;
+  color: #1e293b;
+  margin-bottom: 2rem;
+  text-align: center;
 }
 
+/* Section titles */
+.section-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 1rem;
+}
+
+/* === MACROS SECTION === */
+.macros-section {
+  width: 100%;
+  max-width: 700px;
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+/* Macro cards grid */
 .statistics {
   display: flex;
-  gap: 24px;
-  justify-content: center;
+  justify-content: space-between;
   flex-wrap: wrap;
+  gap: 1.2rem;
 }
 
-.calorie-goal,
-.protein-intake,
-.fat-intake {
-  background-color: white;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  padding: 20px 30px;
-  flex: 1 1 220px; /* flexible width with min 220px */
-  max-width: 300px;
+.macro-card {
+  flex: 1;
+  min-width: 200px;
+  background: #f9fafb;
+  border-radius: 16px;
+  padding: 1rem;
   text-align: center;
-  user-select: none;
-  transition: box-shadow 0.3s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.calorie-goal:hover,
-.protein-intake:hover,
-.fat-intake:hover {
-  box-shadow: 0 6px 15px rgba(255, 111, 97, 0.4); /* accent shadow on hover */
+.macro-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 15px rgba(59, 130, 246, 0.15);
 }
 
-.calorie-goal h2,
-.protein-intake h2,
-.fat-intake h2 {
-  font-size: 1.3rem;
-  color: #ff6f61;
-  margin-bottom: 12px;
+.macro-card h3 {
+  color: #1e293b;
+  font-weight: 600;
+  margin-bottom: 0.8rem;
 }
 
-.calorie-intake,
-.protein-total,
-.fat-total {
-  font-weight: 700;
-  font-size: 1.5rem;
-  color: #444;
+/* Progress circle wrapper */
+.progress-wrapper {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
 }
+
+.progress-label {
+  position: absolute;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.unit {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-left: 2px;
+}
+
+/* === ACTIONS SECTION === */
+.actions-section {
+  width: 100%;
+  max-width: 700px;
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+}
+
 .set-actions {
   display: flex;
-  gap: 24px;
-  justify-content: center;
   flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-around;
 }
-.adjust-goals,
-.create-meal,
-.track-calories {
-  background-color: white;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  padding: 20px 30px;
-  flex: 1 1 220px; /* flexible width with min 220px */
-  max-width: 300px;
+
+.action-card {
+  flex: 1;
+  min-width: 200px;
+  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+  color: white;
+  border-radius: 16px;
+  padding: 1rem;
   text-align: center;
-  user-select: none;
-  transition: box-shadow 0.3s ease;
-}
-
-.calorie-goal:hover,
-.protein-intake:hover,
-.fat-intake:hover,
-.create-meal:hover,
-.adjust-goals:hover {
-  box-shadow: 0 6px 15px rgba(255, 111, 97, 0.4); /* accent shadow on hover */
-}
-
-.adjust-goals h2,
-.create-meal h2,
-.track-calories h2 {
-  font-size: 1.3rem;
-  color: #ff6f61;
-  margin-bottom: 12px;
-}
-
-.calorie-intake,
-.protein-total,
-.fat-total {
-  font-weight: 700;
-  font-size: 1.5rem;
-  color: #444;
-}
-.create-meal,
-.adjust-goals {
   cursor: pointer;
-  user-select: none;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.1s ease;
 }
-.create-meal:hover,
-.adjust-goals:hover {
-  background-color: rgba(255, 255, 255, 0.25);
+
+.action-card:hover {
+  transform: translateY(-3px);
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+}
+
+.action-card h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+  .statistics,
+  .set-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .macro-card,
+  .action-card {
+    width: 90%;
+  }
 }

@@ -1,5 +1,114 @@
-.CreateMealPage {
+/* Page container */
+.create-meal-page {
+  font-family: "Inter", "SF Pro Display", sans-serif;
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+  min-height: 100vh;
+  padding: 2rem 1.5rem;
   display: flex;
   flex-direction: column;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  align-items: center;
+}
+
+/* Title */
+.page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+/* Form container */
+.meal-form {
+  background: white;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  border-radius: 16px;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+/* Input groups */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.input-group label {
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 0.95rem;
+}
+
+.input-group input {
+  padding: 0.8rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.input-group input:focus {
+  border-color: #3b82f6;
+  outline: none;
+}
+
+/* Button */
+.submit-btn {
+  background-color: #3b82f6;
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  padding: 0.9rem;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.25s ease, transform 0.1s ease;
+}
+
+.submit-btn:hover {
+  background-color: #2563eb;
+}
+
+.submit-btn:active {
+  transform: scale(0.98);
+}
+
+/* Meal List */
+.meal-list {
+  margin-top: 2.5rem;
+  width: 100%;
+  max-width: 600px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+}
+
+.meal-list h2 {
+  font-size: 1.5rem;
+  color: #111827;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 0.5rem;
+}
+
+/* Meal cards (from <Meal /> component) */
+.meal {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: box-shadow 0.2s ease, transform 0.1s ease;
+}
+
+.meal:hover {
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.1);
+  transform: translateY(-2px);
 }

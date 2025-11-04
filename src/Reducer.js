@@ -8,7 +8,7 @@ export const initialState = {
   fat_goal: 0,
   dailyLog: {
     date: new Date().toISOString().slice(0, 10),
-    totals: { calories: 5, protein: 0, fat: 0, carbs: 0 },
+    totals: { calories: 0, protein: 0, fat: 0, carbs: 0 },
   },
 };
 export const reducer = (state, action) => {
@@ -36,6 +36,21 @@ export const reducer = (state, action) => {
         calorie_goal: action.payload.calorie_goal ?? state.calorie_goal,
         protein_goal: action.payload.protein_goal ?? state.protein_goal,
         fat_goal: action.payload.fat_goal ?? state.fat_goal,
+      };
+    case "UPDATE_DAILY_LOG":
+      return {
+        ...state,
+        dailyLog: {
+          ...state.dailyLog,
+          totals: {
+            calories:
+              state.dailyLog.totals.calories + (action.payload.calories || 0),
+            protein:
+              state.dailyLog.totals.protein + (action.payload.protein || 0),
+            fat: state.dailyLog.totals.fat + (action.payload.fat || 0),
+            carbs: state.dailyLog.totals.carbs + (action.payload.carbs || 0),
+          },
+        },
       };
   }
 };
