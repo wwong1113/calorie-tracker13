@@ -19,6 +19,7 @@ function Meal({ Name, Ingredients }) {
           <p>{"Pears"}</p>
         </div>
       </div>
+      <button>Edit Meal</button>
     </div>
   );
 }

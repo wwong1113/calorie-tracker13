@@ -6,6 +6,7 @@ import LoginPage from "./Pages/LoginPage";
 import SearchPage from "./Pages/SearchPage";
 import CreateMealPage from "./Pages/CreateMealPage";
 import AdjustGoalsPage from "./Pages/AdjustGoalsPage";
+import TrackCaloriesPage from "./Pages/TrackCaloriesPage";
 function App() {
   return (
     <BrowserRouter>
@@ -53,6 +54,15 @@ function App() {
               <>
                 <Header />
                 <AdjustGoalsPage />
+              </>
+            }
+          />
+          <Route
+            path="/trackCalories"
+            element={
+              <>
+                <Header />
+                <TrackCaloriesPage />
               </>
             }
           />

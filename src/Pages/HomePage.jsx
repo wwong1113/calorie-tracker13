@@ -95,7 +95,10 @@ function HomePage() {
             <h3>Create Meal</h3>
           </div>
 
-          <div className="action-card track-calories">
+          <div
+            className="action-card track-calories"
+            onClick={() => handleSubmit("/trackCalories")}
+          >
             <h3>Track Calories</h3>
           </div>
         </div>
