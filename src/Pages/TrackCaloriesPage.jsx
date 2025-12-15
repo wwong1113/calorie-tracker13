@@ -107,14 +107,6 @@ const TrackCaloriesPage = () => {
           <p>No foods added yet.</p>
         )}
       </div>
-
-      <div className="totals">
-        <h3>Totals</h3>
-        <p>Calories: {dailyLog.totals.calories}</p>
-        <p>Protein: {dailyLog.totals.protein}g</p>
-        <p>Fat: {dailyLog.totals.fat}g</p>
-        <p>Carbs: {dailyLog.totals.carbs}g</p>
-      </div>
     </div>
   );
 };

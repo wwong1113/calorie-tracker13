@@ -59,7 +59,7 @@
 
 /* === Food image === */
 .food-image {
-  width: 180px;
+  width: 200px;
   height: 180px;
   object-fit: cover;
   border-radius: 16px;
@@ -95,7 +95,12 @@
   transition: all 0.2s ease;
   box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
 }
-
+.amount {
+  font-weight: 600;
+  border-radius: 999px;
+  width: 88%;
+  padding: 0.7rem 1.5rem;
+}
 .addToMeal button:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);

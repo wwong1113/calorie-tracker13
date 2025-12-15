@@ -10,7 +10,7 @@ function Meal({ Name, Ingredients }) {
           <div className="nutrients">
             <p>Calories: 1500cal</p>
             <p>Protein: {Ingredients[1]}g</p>
-            <p>Carbs 56g</p>
+            <p>Carbs: 56g</p>
             <p>Fat: 56g</p>
           </div>
         </div>
@@ -19,7 +19,7 @@ function Meal({ Name, Ingredients }) {
           <p>{"Pears"}</p>
         </div>
       </div>
-      <button>Edit Meal</button>
+      <button className="edit-btn">Edit Meal</button>
     </div>
   );
 }

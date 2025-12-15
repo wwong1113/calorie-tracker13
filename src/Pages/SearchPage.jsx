@@ -95,7 +95,13 @@ function SearchPage() {
             g
           </p>
           <form className="addToMeal" onSubmit={addToFavourites}>
-            <button type="submit">Add To Favourites</button>
+            <input
+              type="text"
+              value={query}
+              placeholder="Enter Amount"
+              className="amount"
+            />
+            <button type="submit">Add To Tracking</button>
           </form>
         </div>
       )}

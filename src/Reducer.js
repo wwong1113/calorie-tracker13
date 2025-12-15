@@ -20,6 +20,11 @@ export const reducer = (state, action) => {
         ...state,
         Meals: [...state.Meals, action.payload],
       };
+    case "TRACK_CALORIES":
+      return {
+        ...state,
+        Meals: [...state.Meals, action.payload],
+      };
     case "ADD_FAVOURITES":
       return {
         ...state,
