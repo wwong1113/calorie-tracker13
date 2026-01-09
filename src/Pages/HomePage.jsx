@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../CSS/HomePage.css";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -7,6 +7,37 @@ import { useStateValue } from "../StateProvider";
 function HomePage() {
   const navigate = useNavigate();
   const [{ calorie_goal, protein_goal, fat_goal, dailyLog }] = useStateValue();
+
+  const calorieProgress =
+    calorie_goal > 0
+      ? Math.min((dailyLog.totals.calories / calorie_goal) * 100, 100)
+      : 0;
+
+  const proteinProgress =
+    protein_goal > 0
+      ? Math.min((dailyLog.totals.protein / protein_goal) * 100, 100)
+      : 0;
+
+  const fatProgress =
+    fat_goal > 0 ? Math.min((dailyLog.totals.fat / fat_goal) * 100, 100) : 0;
+
+  const [animatedCalories, setAnimatedCalories] = useState(0);
+  const [animatedProtein, setAnimatedProtein] = useState(0);
+  const [animatedFat, setAnimatedFat] = useState(0);
+
+  useEffect(() => {
+    setAnimatedCalories(0);
+    setAnimatedProtein(0);
+    setAnimatedFat(0);
+
+    const timeout = setTimeout(() => {
+      setAnimatedCalories(calorieProgress);
+      setAnimatedProtein(proteinProgress);
+      setAnimatedFat(fatProgress);
+    }, 100);
+
+    return () => clearTimeout(timeout);
+  }, [calorieProgress, proteinProgress, fatProgress]);
 
   const handleSubmit = (path) => {
     navigate(path);
@@ -24,11 +55,14 @@ function HomePage() {
             <div className="progress-wrapper">
               <CircularProgress
                 variant="determinate"
-                value={25}
+                value={animatedCalories}
                 size={90}
+                transitionDuration={800}
                 sx={{
                   color: "#3B82F6",
-                  "& .MuiCircularProgress-circle": { strokeLinecap: "round" },
+                  "& .MuiCircularProgress-circle": {
+                    strokeLinecap: "round",
+                  },
                 }}
               />
               <span className="progress-label">
@@ -43,11 +77,14 @@ function HomePage() {
             <div className="progress-wrapper">
               <CircularProgress
                 variant="determinate"
-                value={50}
+                value={animatedProtein}
                 size={90}
+                transitionDuration={800}
                 sx={{
-                  color: "#EF4444", // ✅ Red (Protein)
-                  "& .MuiCircularProgress-circle": { strokeLinecap: "round" },
+                  color: "#EF4444",
+                  "& .MuiCircularProgress-circle": {
+                    strokeLinecap: "round",
+                  },
                 }}
               />
               <span className="progress-label">
@@ -62,11 +99,14 @@ function HomePage() {
             <div className="progress-wrapper">
               <CircularProgress
                 variant="determinate"
-                value={75}
+                value={animatedFat}
                 size={90}
+                transitionDuration={800}
                 sx={{
-                  color: "#FACC15", // ✅ Yellow (Fat)
-                  "& .MuiCircularProgress-circle": { strokeLinecap: "round" },
+                  color: "#FACC15",
+                  "& .MuiCircularProgress-circle": {
+                    strokeLinecap: "round",
+                  },
                 }}
               />
               <span className="progress-label">

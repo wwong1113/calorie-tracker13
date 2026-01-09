@@ -9,49 +9,61 @@ function AdjustGoalsPage() {
   const [protein, setProtein] = useState(protein_goal);
   const [fats, setFats] = useState(fat_goal);
 
-  const handleConfirm = (type) => {
-    let newGoals = {};
-    if (type === "calories") newGoals = { calorie_goal: calories };
-    if (type === "protein") newGoals = { protein_goal: protein };
-    if (type === "fats") newGoals = { fat_goal: fats };
+  const handleConfirm = (type, value) => {
+    if (!value || value <= 0) return;
 
     dispatch({
       type: "CHANGE_GOALS",
-      payload: newGoals,
+      payload:
+        type === "calories"
+          ? { calorie_goal: value }
+          : type === "protein"
+          ? { protein_goal: value }
+          : { fat_goal: value },
     });
   };
 
   return (
     <div className="adjust-goals-page">
       <div className="goal-adjustment">
+        {/* Calories */}
         <div className="adjust-calories">
-          <h3>Adjust Calories</h3>
+          <h3>Daily Calories</h3>
+          <p className="current-goal">Current: {calorie_goal} kcal</p>
           <input
             type="text"
-            placeholder="Enter new goal"
+            value={calories}
             onChange={(e) => setCalories(Number(e.target.value))}
           />
-          <button onClick={() => handleConfirm("calories")}>Confirm</button>
+          <button onClick={() => handleConfirm("calories", calories)}>
+            Save
+          </button>
         </div>
 
+        {/* Protein */}
         <div className="adjust-protein">
-          <h3>Adjust Protein</h3>
+          <h3>Daily Protein</h3>
+          <p className="current-goal">Current: {protein_goal} g</p>
           <input
             type="text"
-            placeholder="Enter new goal"
+            value={protein}
             onChange={(e) => setProtein(Number(e.target.value))}
           />
-          <button onClick={() => handleConfirm("protein")}>Confirm</button>
+          <button onClick={() => handleConfirm("protein", protein)}>
+            Save
+          </button>
         </div>
 
+        {/* Fats */}
         <div className="adjust-fats">
-          <h3>Adjust Fats</h3>
+          <h3>Daily Fats</h3>
+          <p className="current-goal">Current: {fat_goal} g</p>
           <input
             type="text"
-            placeholder="Enter new goal"
+            value={fats}
             onChange={(e) => setFats(Number(e.target.value))}
           />
-          <button onClick={() => handleConfirm("fats")}>Confirm</button>
+          <button onClick={() => handleConfirm("fats", fats)}>Save</button>
         </div>
       </div>
     </div>

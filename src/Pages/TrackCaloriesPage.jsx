@@ -65,29 +65,24 @@ const TrackCaloriesPage = () => {
           onChange={(e) => setFoodName(e.target.value)}
         />
         <input
-          type="number"
+          type="text"
           placeholder="Calories"
           value={calories}
           onChange={(e) => setCalories(e.target.value)}
         />
         <input
-          type="number"
+          type="text"
           placeholder="Protein (g)"
           value={protein}
           onChange={(e) => setProtein(e.target.value)}
         />
         <input
-          type="number"
+          type="text"
           placeholder="Fat (g)"
           value={fat}
           onChange={(e) => setFat(e.target.value)}
         />
-        <input
-          type="number"
-          placeholder="Carbs (g)"
-          value={carbs}
-          onChange={(e) => setCarbs(e.target.value)}
-        />
+
         <button type="submit">Add Food</button>
       </form>
 

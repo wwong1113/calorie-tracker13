@@ -1,0 +1,170 @@
+/* === Main container === */
+.track-calories-page {
+  min-height: calc(100vh - 120px);
+  background: linear-gradient(180deg, #f9fafb 0%, #eef2ff 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem 1rem;
+  font-family: "Inter", "SF Pro Display", sans-serif;
+  box-sizing: border-box;
+}
+
+/* === Page title === */
+.track-calories-page h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 2rem;
+}
+
+/* === Food form card === */
+.food-form {
+  width: 100%;
+  max-width: 420px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.07);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  animation: fadeIn 0.4s ease;
+}
+
+/* === Inputs === */
+.food-form input {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.2s ease;
+  width: 90%;
+}
+
+.food-form input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+/* === Add food button === */
+.food-form button {
+  margin-top: 0.5rem;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  border: none;
+  color: white;
+  font-weight: 600;
+  border-radius: 10px; /* 👈 reduced */
+  padding: 0.75rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
+}
+
+.food-form button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.3);
+}
+
+.food-form button:active {
+  transform: scale(0.97);
+}
+
+/* === Tracked foods section === */
+.tracked-foods {
+  width: 100%;
+  max-width: 520px;
+  margin-top: 3rem;
+  animation: fadeIn 0.5s ease;
+}
+
+.tracked-foods h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 1.2rem;
+  text-align: center;
+}
+
+/* === Individual food item === */
+.food-item {
+  background: white;
+  border-radius: 16px;
+  padding: 1rem 1.2rem;
+  margin-bottom: 0.8rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  transition: all 0.2s ease;
+}
+
+.food-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+}
+
+/* === Food text === */
+.food-item span {
+  font-size: 0.9rem;
+  color: #334155;
+  line-height: 1.4;
+}
+
+/* === Remove button === */
+.food-item button {
+  background: #ef4444;
+  border: none;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.45rem 0.9rem;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.food-item button:hover {
+  background: #dc2626;
+  transform: scale(1.05);
+}
+
+/* === Empty state === */
+.tracked-foods p {
+  text-align: center;
+  color: #64748b;
+  font-size: 0.95rem;
+  margin-top: 1rem;
+}
+
+/* === Fade animation === */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* === Responsive === */
+@media (max-width: 600px) {
+  .food-form {
+    padding: 1.6rem 1.3rem;
+  }
+
+  .food-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+
+  .food-item button {
+    align-self: flex-end;
+  }
+}

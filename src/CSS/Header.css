@@ -87,7 +87,7 @@
   background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
   color: white;
   border: none;
-  border-radius: 999px; /* pill shape */
+  border-radius: 15px; /* pill shape */
   padding: 0.5rem 1.2rem;
   font-weight: 600;
   font-size: 0.9rem;
