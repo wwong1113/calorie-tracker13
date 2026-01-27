@@ -3,11 +3,13 @@ import "../CSS/AdjustGoalsPage.css";
 import { useStateValue } from "../StateProvider";
 
 function AdjustGoalsPage() {
-  const [{ calorie_goal, protein_goal, fat_goal }, dispatch] = useStateValue();
+  const [{ calorie_goal, protein_goal, fat_goal, carb_goal }, dispatch] =
+    useStateValue();
 
   const [calories, setCalories] = useState(calorie_goal);
   const [protein, setProtein] = useState(protein_goal);
   const [fats, setFats] = useState(fat_goal);
+  const [carbs, setCarbs] = useState(carb_goal);
 
   const handleConfirm = (type, value) => {
     if (!value || value <= 0) return;
@@ -18,8 +20,8 @@ function AdjustGoalsPage() {
         type === "calories"
           ? { calorie_goal: value }
           : type === "protein"
-          ? { protein_goal: value }
-          : { fat_goal: value },
+            ? { protein_goal: value }
+            : { fat_goal: value },
     });
   };
 
@@ -62,6 +64,16 @@ function AdjustGoalsPage() {
             type="text"
             value={fats}
             onChange={(e) => setFats(Number(e.target.value))}
+          />
+          <button onClick={() => handleConfirm("fats", fats)}>Save</button>
+        </div>
+        <div className="adjust-carbs">
+          <h3>Daily Fats</h3>
+          <p className="current-goal">Current: {carb_goal} g</p>
+          <input
+            type="text"
+            value={fats}
+            onChange={(e) => setCarbs(Number(e.target.value))}
           />
           <button onClick={() => handleConfirm("fats", fats)}>Save</button>
         </div>

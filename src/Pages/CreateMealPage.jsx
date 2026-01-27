@@ -1,14 +1,30 @@
 import React, { useState } from "react";
 import Meal from "../Components/Meal";
 import "../CSS/CreateMeal.css";
+import { useStateValue } from "../StateProvider"; // adjust path if needed
 
 function CreateMealPage() {
+  const [{ Meals }, dispatch] = useStateValue();
+
   const [food, setFood] = useState("");
   const [mealName, setMealName] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Food:", food, "Meal Name:", mealName);
+
+    const newMeal = {
+      id: Date.now(),
+      name: mealName,
+      ingredients: food.split(","), // simple parsing
+    };
+
+    dispatch({
+      type: "ADD_MEAL",
+      payload: newMeal,
+    });
+
+    setFood("");
+    setMealName("");
   };
 
   return (
@@ -22,7 +38,7 @@ function CreateMealPage() {
             type="text"
             value={food}
             placeholder="e.g., Chicken Breast, Rice, Avocado..."
-            onChange={(event) => setFood(event.target.value)}
+            onChange={(e) => setFood(e.target.value)}
           />
         </div>
 
@@ -32,7 +48,7 @@ function CreateMealPage() {
             type="text"
             value={mealName}
             placeholder="e.g., Post-Workout Lunch"
-            onChange={(event) => setMealName(event.target.value)}
+            onChange={(e) => setMealName(e.target.value)}
           />
         </div>
 
@@ -43,7 +59,10 @@ function CreateMealPage() {
 
       <div className="meal-list">
         <h2>Your Meals</h2>
-        <Meal Name={"Egg Fried Rice"} Ingredients={[333, 111]} />
+
+        {Meals.map((meal) => (
+          <Meal key={meal.id} Name={meal.name} Ingredients={meal.ingredients} />
+        ))}
       </div>
     </div>
   );

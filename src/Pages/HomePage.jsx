@@ -6,13 +6,17 @@ import { useStateValue } from "../StateProvider";
 
 function HomePage() {
   const navigate = useNavigate();
-  const [{ calorie_goal, protein_goal, fat_goal, dailyLog }] = useStateValue();
+  const [{ calorie_goal, protein_goal, fat_goal, carb_goal, dailyLog }] =
+    useStateValue();
 
   const calorieProgress =
     calorie_goal > 0
       ? Math.min((dailyLog.totals.calories / calorie_goal) * 100, 100)
       : 0;
-
+  const carbProgress =
+    carb_goal > 0
+      ? Math.min((dailyLog.totals.carbs / carb_goal) * 100, 100)
+      : 0;
   const proteinProgress =
     protein_goal > 0
       ? Math.min((dailyLog.totals.protein / protein_goal) * 100, 100)
@@ -24,20 +28,22 @@ function HomePage() {
   const [animatedCalories, setAnimatedCalories] = useState(0);
   const [animatedProtein, setAnimatedProtein] = useState(0);
   const [animatedFat, setAnimatedFat] = useState(0);
-
+  const [animatedCarb, setAnimatedCarb] = useState(0);
   useEffect(() => {
     setAnimatedCalories(0);
     setAnimatedProtein(0);
     setAnimatedFat(0);
+    setAnimatedCarb(0);
 
     const timeout = setTimeout(() => {
       setAnimatedCalories(calorieProgress);
       setAnimatedProtein(proteinProgress);
       setAnimatedFat(fatProgress);
+      setAnimatedCarb(carbProgress);
     }, 100);
 
     return () => clearTimeout(timeout);
-  }, [calorieProgress, proteinProgress, fatProgress]);
+  }, [calorieProgress, proteinProgress, fatProgress, carbProgress]);
 
   const handleSubmit = (path) => {
     navigate(path);
@@ -111,6 +117,27 @@ function HomePage() {
               />
               <span className="progress-label">
                 {dailyLog.totals.fat}/{fat_goal}
+                <span className="unit">g</span>
+              </span>
+            </div>
+          </div>
+          <div className="macro-card fat-intake">
+            <h3>Carbs</h3>
+            <div className="progress-wrapper">
+              <CircularProgress
+                variant="determinate"
+                value={animatedCarb}
+                size={90}
+                transitionDuration={800}
+                sx={{
+                  color: "#FACC15",
+                  "& .MuiCircularProgress-circle": {
+                    strokeLinecap: "round",
+                  },
+                }}
+              />
+              <span className="progress-label">
+                {dailyLog.totals.carbs}/{carb_goal}
                 <span className="unit">g</span>
               </span>
             </div>

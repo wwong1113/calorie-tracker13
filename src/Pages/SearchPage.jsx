@@ -2,17 +2,33 @@ import React, { useState, useReducer } from "react";
 import "../CSS/SearchPage.CSS";
 import { reducer, initialState } from "../Reducer.js";
 import { StateContext } from "../StateProvider";
+import { useStateValue } from "../StateProvider";
 function SearchPage() {
   const API_KEY = import.meta.env.VITE_FOOD_API_KEY;
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const [query, setQuery] = useState("");
-  const [foodInfo, setFoodInfo] = useState(null);
+  const [{ dailyLog }, dispatch] = useStateValue();
 
-  const addToFavourites = (event) => {
+  const [query, setQuery] = useState("");
+  const [amount, setAmount] = useState(100);
+  const [foodInfo, setFoodInfo] = useState(null);
+  const getNutrient = (name) => {
+    return (
+      foodInfo?.nutrition?.nutrients.find((n) => n.name === name)?.amount || 0
+    );
+  };
+
+  const addToDailyLog = (event) => {
     event.preventDefault();
+
+    const multiplier = amount / 100;
+
     dispatch({
-      type: "ADD_FAVOURITES",
-      payload: foodInfo,
+      type: "UPDATE_DAILY_LOG",
+      payload: {
+        calories: getNutrient("Calories") * multiplier,
+        protein: getNutrient("Protein") * multiplier,
+        fat: getNutrient("Fat") * multiplier,
+        carbs: getNutrient("Carbohydrates") * multiplier,
+      },
     });
   };
   const handleSubmit = async (event) => {
@@ -94,12 +110,14 @@ function SearchPage() {
             {foodInfo.nutrition.nutrients.find((n) => n.name === "Fat")?.amount}{" "}
             g
           </p>
-          <form className="addToMeal" onSubmit={addToFavourites}>
+          <form className="addToMeal" onSubmit={addToDailyLog}>
             <input
-              type="text"
-              value={query}
-              placeholder="Enter Amount"
+              type="number"
+              value={amount}
+              onChange={(e) => setAmount(Number(e.target.value))}
+              placeholder="Enter grams"
               className="amount"
+              min="1"
             />
             <button type="submit">Add To Tracking</button>
           </form>
