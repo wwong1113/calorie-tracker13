@@ -1,49 +1,58 @@
+import { isConfigured } from "../firebase";
+import { defaultData, loadGuest } from "./lib/storage";
+
+// Shape: { user, ready, syncError, goals, meals, logs }
+// logs maps a local date key ("2026-11-16") to that day's food entries.
+// With Firebase set up, `ready` stays false until we know who is signed in.
 export const initialState = {
   user: null,
-  Meals: [],
-  Favourites: [],
-  calorie_goal: 1000,
-  protein_goal: 50,
-  fat_goal: 50,
-  carb_goal: 100,
-  dailyLog: {
-    date: new Date().toISOString().slice(0, 10),
-    totals: { calories: 0, protein: 0, fat: 0, carbs: 0 },
-  },
+  syncError: null,
+  ready: !isConfigured,
+  ...(isConfigured ? defaultData() : loadGuest()),
 };
 
 export const reducer = (state, action) => {
   switch (action.type) {
+    // Replace everything when the signed-in account changes.
+    case "LOAD":
+      return { syncError: null, ...action.payload, ready: true };
+
+    case "SYNC_ERROR":
+      return { ...state, syncError: action.payload };
+
+    case "SET_GOALS":
+      return { ...state, goals: { ...state.goals, ...action.payload } };
+
     case "ADD_MEAL":
+      return { ...state, meals: [action.payload, ...state.meals] };
+
+    case "UPDATE_MEAL":
       return {
         ...state,
-        Meals: [...state.Meals, action.payload],
+        meals: state.meals.map((meal) =>
+          meal.id === action.payload.id ? action.payload : meal,
+        ),
       };
 
-    case "CHANGE_GOALS":
+    case "DELETE_MEAL":
       return {
         ...state,
-        calorie_goal: action.payload.calorie_goal ?? state.calorie_goal,
-        protein_goal: action.payload.protein_goal ?? state.protein_goal,
-        fat_goal: action.payload.fat_goal ?? state.fat_goal,
-        carb_goal: action.payload.carb_goal ?? state.carb_goal,
+        meals: state.meals.filter((meal) => meal.id !== action.payload),
       };
 
-    case "UPDATE_DAILY_LOG":
-      return {
-        ...state,
-        dailyLog: {
-          ...state.dailyLog,
-          totals: {
-            calories:
-              state.dailyLog.totals.calories + (action.payload.calories || 0),
-            protein:
-              state.dailyLog.totals.protein + (action.payload.protein || 0),
-            fat: state.dailyLog.totals.fat + (action.payload.fat || 0),
-            carbs: state.dailyLog.totals.carbs + (action.payload.carbs || 0),
-          },
-        },
-      };
+    case "ADD_ENTRY": {
+      const day = [...(state.logs[action.date] ?? [])];
+      // An index is passed when undoing a removal, to put it back in place.
+      day.splice(action.index ?? day.length, 0, action.payload);
+      return { ...state, logs: { ...state.logs, [action.date]: day } };
+    }
+
+    case "REMOVE_ENTRY": {
+      const day = (state.logs[action.date] ?? []).filter(
+        (entry) => entry.id !== action.payload,
+      );
+      return { ...state, logs: { ...state.logs, [action.date]: day } };
+    }
 
     default:
       return state;

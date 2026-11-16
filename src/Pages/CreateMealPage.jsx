@@ -1,70 +1,106 @@
 import React, { useState } from "react";
 import Meal from "../Components/Meal";
-import "../CSS/CreateMeal.css";
-import { useStateValue } from "../StateProvider"; // adjust path if needed
+import MacroFields from "../Components/MacroFields";
+import { useStateValue } from "../StateProvider";
+import { useToast } from "../Components/Toast";
+import { newId, num } from "../lib/nutrition";
+
+const EMPTY = { calories: "", protein: "", carbs: "", fat: "" };
 
 function CreateMealPage() {
-  const [{ Meals }, dispatch] = useStateValue();
+  const [{ meals }, dispatch] = useStateValue();
+  const toast = useToast();
 
-  const [food, setFood] = useState("");
-  const [mealName, setMealName] = useState("");
+  const [name, setName] = useState("");
+  const [ingredients, setIngredients] = useState("");
+  const [values, setValues] = useState(EMPTY);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const newMeal = {
-      id: Date.now(),
-      name: mealName,
-      ingredients: food.split(","), // simple parsing
-    };
+    if (!name.trim()) return;
 
     dispatch({
       type: "ADD_MEAL",
-      payload: newMeal,
+      payload: {
+        id: newId(),
+        name: name.trim(),
+        ingredients: ingredients
+          .split(",")
+          .map((item) => item.trim())
+          .filter(Boolean),
+        calories: num(values.calories),
+        protein: num(values.protein),
+        carbs: num(values.carbs),
+        fat: num(values.fat),
+      },
     });
-
-    setFood("");
-    setMealName("");
+    toast(`Saved ${name.trim()}`);
+    setName("");
+    setIngredients("");
+    setValues(EMPTY);
   };
 
   return (
-    <div className="create-meal-page">
-      <h1 className="page-title">Create Your Meal</h1>
-
-      <form className="meal-form" onSubmit={handleSubmit}>
-        <div className="input-group">
-          <label>Search for Foods</label>
-          <input
-            type="text"
-            value={food}
-            placeholder="e.g., Chicken Breast, Rice, Avocado..."
-            onChange={(e) => setFood(e.target.value)}
-          />
+    <main className="page">
+      <div className="page-head">
+        <div>
+          <p className="eyebrow">Save once, log in one tap</p>
+          <h1 className="display">Meals</h1>
         </div>
+      </div>
 
-        <div className="input-group">
-          <label>Meal Name</label>
+      <form className="card stack" onSubmit={handleSubmit}>
+        <h2 className="title">New meal</h2>
+        <label className="field" htmlFor="meal-name">
+          <span className="field-label">Meal name</span>
           <input
+            id="meal-name"
+            className="input"
             type="text"
-            value={mealName}
-            placeholder="e.g., Post-Workout Lunch"
-            onChange={(e) => setMealName(e.target.value)}
+            autoComplete="off"
+            placeholder="Post-workout lunch"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
-        </div>
-
-        <button type="submit" className="submit-btn">
-          Add Meal
+        </label>
+        <label className="field" htmlFor="meal-ingredients">
+          <span className="field-label">
+            Ingredients <span className="field-unit">optional, comma separated</span>
+          </span>
+          <input
+            id="meal-ingredients"
+            className="input"
+            type="text"
+            autoComplete="off"
+            placeholder="Chicken, rice, avocado"
+            value={ingredients}
+            onChange={(e) => setIngredients(e.target.value)}
+          />
+        </label>
+        <MacroFields values={values} onChange={setValues} idPrefix="new-meal" />
+        <button type="submit" className="btn btn-primary" disabled={!name.trim()}>
+          Save meal
         </button>
       </form>
 
-      <div className="meal-list">
-        <h2>Your Meals</h2>
-
-        {Meals.map((meal) => (
-          <Meal key={meal.id} Name={meal.name} Ingredients={meal.ingredients} />
-        ))}
-      </div>
-    </div>
+      <section aria-label="Your meals">
+        <div className="section-head">
+          <h2 className="title">Your meals</h2>
+        </div>
+        {meals.length === 0 ? (
+          <div className="card empty">
+            <p className="empty-title">No meals saved yet</p>
+            <p className="hint">Meals you save here show up under “My meals” when you add food.</p>
+          </div>
+        ) : (
+          <div className="meal-grid">
+            {meals.map((meal) => (
+              <Meal key={meal.id} meal={meal} />
+            ))}
+          </div>
+        )}
+      </section>
+    </main>
   );
 }
 

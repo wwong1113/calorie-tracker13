@@ -1,12 +1,44 @@
-# React + Vite
+# FitTrack
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A calorie and macro tracker built with React and Vite. Log food by day, save meals, set goals, and look up nutrition for ingredients. Accounts and sync use Firebase.
 
-Currently, two official plugins are available:
+## Run it
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```bash
+npm install
+npm run dev
+```
 
-## Expanding the ESLint configuration
+Without any setup the app runs in guest mode: everything is saved in the browser, and accounts are switched off.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Setup
+
+Copy `.env.example` to `.env` and fill it in.
+
+**Food search** needs a [Spoonacular](https://spoonacular.com/food-api) key in `VITE_FOOD_API_KEY`.
+
+**Accounts and sync** need a Firebase project:
+
+1. Create a project at <https://console.firebase.google.com>.
+2. Build > Authentication > Sign-in method: turn on **Email/Password**.
+3. Build > Firestore Database: create a database.
+4. In the Firestore **Rules** tab, paste the contents of `firestore.rules` and publish.
+5. Project settings > Your apps: add a **Web** app, then copy `apiKey`, `authDomain`, `projectId` and `appId` into the four `VITE_FIREBASE_*` lines in `.env`.
+6. Restart `npm run dev`.
+
+## Try accounts without a Firebase project
+
+This uses the local Firebase emulators (needs Java). Nothing leaves your machine, and the data is wiped when the emulators stop.
+
+```bash
+npm run emulators
+```
+
+```bash
+npm run dev:emulator
+```
+
+## Where data lives
+
+- Signed out: this browser's localStorage. It moves into your account when you create one.
+- Signed in: Firestore, in `users/{uid}` (goals and meals) and `users/{uid}/days/{date}` (that day's food log).
