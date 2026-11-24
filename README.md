@@ -1,6 +1,14 @@
 # FitTrack
 
-A calorie and macro tracker built with React and Vite. Log food by day, save meals, set goals, and look up nutrition for ingredients. Accounts and sync use Firebase.
+A calorie and nutrient tracker built with React and Vite. Accounts and sync use Firebase.
+
+- **Today:** calories and macros for any day, a food log, water, and a supplement checklist.
+- **Nutrients:** 14 vitamins and minerals plus sodium and saturated fat as % of target, a daily nutrient score, 7-day averages, and food suggestions for your biggest gaps.
+- **Search:** nutrition for any ingredient, scaled to the grams you eat, with what it's rich in.
+- **Meals:** save meals you eat often and log them in one tap.
+- **Goals:** calories, macros, water, and your own vitamin and mineral targets (defaults are the US Daily Values).
+
+Vitamin and mineral data comes from food search, so foods typed in by hand count toward calories and macros only.
 
 ## Run it
 
@@ -41,4 +49,4 @@ npm run dev:emulator
 ## Where data lives
 
 - Signed out: this browser's localStorage. It moves into your account when you create one.
-- Signed in: Firestore, in `users/{uid}` (goals and meals) and `users/{uid}/days/{date}` (that day's food log).
+- Signed in: Firestore, in `users/{uid}` (goals, meals, supplements) and `users/{uid}/days/{date}` (that day's food log, water, and supplements taken).

@@ -1,7 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useStateValue } from "../StateProvider";
 import { useToast } from "../Components/Toast";
 import { dateKey, newId, round1 } from "../lib/nutrition";
+import {
+  LIMITS,
+  NUTRIENTS,
+  extractNutrients,
+  percentOf,
+  scaleNutrients,
+  targetsFor,
+} from "../lib/nutrients";
 
 const API = "https://api.spoonacular.com/food/ingredients";
 const API_KEY = import.meta.env.VITE_FOOD_API_KEY?.trim();
@@ -16,11 +25,17 @@ async function api(path, params) {
 
 const titleCase = (s) => s.replace(/\b\w/g, (c) => c.toUpperCase());
 
-function SearchPage() {
-  const [, dispatch] = useStateValue();
-  const toast = useToast();
+// 20% of a target or more is "high" in a serving (the FDA's definition).
+const HIGH = 20;
 
-  const [query, setQuery] = useState("");
+function SearchPage() {
+  const [{ goals }, dispatch] = useStateValue();
+  const toast = useToast();
+  // The search term lives in the URL, so Nutrients can link straight to a search.
+  const [params, setParams] = useSearchParams();
+  const term = params.get("q") ?? "";
+
+  const [query, setQuery] = useState(term);
   const [status, setStatus] = useState("idle"); // idle | loading | done | error
   const [error, setError] = useState("");
   const [results, setResults] = useState([]);
@@ -28,27 +43,42 @@ function SearchPage() {
   const [loadingId, setLoadingId] = useState(null);
   const [grams, setGrams] = useState("100");
 
-  const search = async (e) => {
-    e.preventDefault();
-    if (!query.trim()) return;
-    setStatus("loading");
+  useEffect(() => {
+    setQuery(term);
     setFood(null);
-    try {
-      const data = await api("/search", { query: query.trim(), number: 8 });
-      setResults(data.results ?? []);
-      setStatus("done");
-    } catch (err) {
-      setError(err.message);
-      setStatus("error");
+    if (!term) {
+      setStatus("idle");
+      return;
     }
+    let cancelled = false;
+    setStatus("loading");
+    api("/search", { query: term, number: 8 })
+      .then((data) => {
+        if (cancelled) return;
+        setResults(data.results ?? []);
+        setStatus("done");
+      })
+      .catch((err) => {
+        if (cancelled) return;
+        setError(err.message);
+        setStatus("error");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [term]);
+
+  const search = (e) => {
+    e.preventDefault();
+    if (query.trim()) setParams({ q: query.trim() });
   };
 
   const pick = async (result) => {
     setLoadingId(result.id);
     try {
       const info = await api(`/${result.id}/information`, { amount: 100, unit: "grams" });
-      const nutrient = (name) =>
-        info.nutrition?.nutrients?.find((n) => n.name === name)?.amount ?? 0;
+      const list = info.nutrition?.nutrients ?? [];
+      const nutrient = (name) => list.find((n) => n.name === name)?.amount ?? 0;
       setFood({
         name: titleCase(info.name),
         image: info.image,
@@ -56,6 +86,7 @@ function SearchPage() {
         protein: nutrient("Protein"),
         carbs: nutrient("Carbohydrates"),
         fat: nutrient("Fat"),
+        nutrients: extractNutrients(list),
       });
       setGrams("100");
     } catch (err) {
@@ -67,12 +98,26 @@ function SearchPage() {
   };
 
   const amount = Math.max(0, Number(grams) || 0);
+  const factor = amount / 100;
   const scaled = food && {
-    calories: round1((food.calories * amount) / 100),
-    protein: round1((food.protein * amount) / 100),
-    carbs: round1((food.carbs * amount) / 100),
-    fat: round1((food.fat * amount) / 100),
+    calories: round1(food.calories * factor),
+    protein: round1(food.protein * factor),
+    carbs: round1(food.carbs * factor),
+    fat: round1(food.fat * factor),
+    nutrients: scaleNutrients(food.nutrients, factor),
   };
+
+  // What this amount is rich in, and anything to watch, against the user's targets.
+  const targets = targetsFor(goals);
+  const ranked = (list) =>
+    scaled
+      ? list
+          .map((n) => ({ ...n, percent: percentOf(scaled.nutrients[n.key], targets[n.key]) }))
+          .filter((n) => n.percent >= HIGH)
+          .sort((a, b) => b.percent - a.percent)
+      : [];
+  const richIn = ranked(NUTRIENTS).slice(0, 5);
+  const highIn = ranked(LIMITS);
 
   const addToLog = () => {
     dispatch({
@@ -173,6 +218,33 @@ function SearchPage() {
             ))}
           </dl>
 
+          <div className="food-nutrients">
+            <p className="field-label">Rich in</p>
+            {richIn.length > 0 ? (
+              <ul className="nutrient-chips">
+                {richIn.map((n) => (
+                  <li key={n.key} className="nutrient-chip">
+                    {n.label} <strong>{n.percent}%</strong>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="hint">
+                No vitamin or mineral reaches {HIGH}% of your target at {amount} g.
+              </p>
+            )}
+            {highIn.length > 0 && (
+              <ul className="nutrient-chips">
+                {highIn.map((n) => (
+                  <li key={n.key} className="nutrient-chip nutrient-chip-warn">
+                    High in {n.label.toLowerCase()} <strong>{n.percent}%</strong>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <p className="hint">% of your daily target for this amount.</p>
+          </div>
+
           <div className="btn-row">
             <button type="button" className="btn btn-secondary" disabled={amount <= 0} onClick={saveAsMeal}>
               Save as meal
@@ -186,7 +258,7 @@ function SearchPage() {
 
       {status === "done" && results.length === 0 && (
         <div className="card empty">
-          <p className="empty-title">No foods found for “{query.trim()}”</p>
+          <p className="empty-title">No foods found for “{term}”</p>
           <p className="hint">Try a simpler name, like “rice” instead of “leftover fried rice”.</p>
         </div>
       )}
@@ -221,7 +293,8 @@ function SearchPage() {
         <div className="card empty">
           <p className="empty-title">Look up any ingredient</p>
           <p className="hint">
-            Pick a result, set the amount in grams, then add it to today or save it as a meal.
+            See its calories, macros and the vitamins and minerals it’s rich in, then add it to
+            today or save it as a meal.
           </p>
         </div>
       )}

@@ -4,6 +4,8 @@ import { saveCloud, saveGuest, watchSession } from "./lib/storage";
 
 export const StateContext = createContext();
 
+const DATA_KEYS = ["goals", "meals", "supplements", "logs", "water", "taken"];
+
 const LOAD_FAILED =
   "Couldn’t load your account data. Check your connection and reload. Changes won’t be saved until then.";
 const SAVE_FAILED = "Couldn’t save your latest change. Check your connection and reload.";
@@ -33,8 +35,7 @@ export const StateProvider = ({ reducer, initialState, children }) => {
     saved.current = state;
 
     if (!state.user) {
-      if (prev.goals !== state.goals || prev.meals !== state.meals || prev.logs !== state.logs)
-        saveGuest(state);
+      if (DATA_KEYS.some((key) => prev[key] !== state[key])) saveGuest(state);
       return;
     }
     saveCloud(state.user.uid, prev, state).catch(() =>

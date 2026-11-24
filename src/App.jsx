@@ -8,6 +8,7 @@ import LoginPage from "./Pages/LoginPage";
 import SearchPage from "./Pages/SearchPage";
 import CreateMealPage from "./Pages/CreateMealPage";
 import AdjustGoalsPage from "./Pages/AdjustGoalsPage";
+import NutrientsPage from "./Pages/NutrientsPage";
 import { useStateValue } from "./StateProvider";
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
                 path="/trackCalories"
                 element={<Navigate to="/" replace state={{ add: true }} />}
               />
+              <Route path="/nutrients" element={<NutrientsPage />} />
               <Route path="/search" element={<SearchPage />} />
               <Route path="/createMeal" element={<CreateMealPage />} />
               <Route path="/adjustGoals" element={<AdjustGoalsPage />} />

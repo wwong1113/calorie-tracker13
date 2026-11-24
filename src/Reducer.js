@@ -1,8 +1,8 @@
 import { isConfigured } from "../firebase";
 import { defaultData, loadGuest } from "./lib/storage";
 
-// Shape: { user, ready, syncError, goals, meals, logs }
-// logs maps a local date key ("2026-11-16") to that day's food entries.
+// Shape: { user, ready, syncError, goals, meals, supplements, logs, water, taken }
+// logs, water and taken are keyed by local date ("2026-11-16").
 // With Firebase set up, `ready` stays false until we know who is signed in.
 export const initialState = {
   user: null,
@@ -52,6 +52,29 @@ export const reducer = (state, action) => {
         (entry) => entry.id !== action.payload,
       );
       return { ...state, logs: { ...state.logs, [action.date]: day } };
+    }
+
+    case "SET_WATER":
+      return { ...state, water: { ...state.water, [action.date]: Math.max(0, action.payload) } };
+
+    case "ADD_SUPPLEMENT": {
+      const list = [...state.supplements];
+      list.splice(action.index ?? list.length, 0, action.payload);
+      return { ...state, supplements: list };
+    }
+
+    case "REMOVE_SUPPLEMENT":
+      return {
+        ...state,
+        supplements: state.supplements.filter((s) => s.id !== action.payload),
+      };
+
+    case "TOGGLE_TAKEN": {
+      const day = state.taken[action.date] ?? [];
+      const next = day.includes(action.payload)
+        ? day.filter((id) => id !== action.payload)
+        : [...day, action.payload];
+      return { ...state, taken: { ...state.taken, [action.date]: next } };
     }
 
     default:

@@ -31,6 +31,16 @@ const TABS = [
     ),
   },
   {
+    to: "/nutrients",
+    label: "Nutrients",
+    icon: icon(
+      <>
+        <path d="M5 19c0-8.3 5.7-14 14-14 0 8.3-5.7 14-14 14z" />
+        <path d="M5 19l7.5-7.5" />
+      </>,
+    ),
+  },
+  {
     to: "/search",
     label: "Search",
     icon: icon(

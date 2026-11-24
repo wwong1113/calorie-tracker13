@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { AnimatePresence, motion, useSpring, useTransform } from "motion/react";
 import Ring from "../Components/Ring";
 import AddFoodSheet from "../Components/AddFoodSheet";
+import { SupplementsCard, WaterCard } from "../Components/DailyHabits";
 import { useStateValue } from "../StateProvider";
 import { useToast } from "../Components/Toast";
 import {
@@ -14,6 +15,7 @@ import {
   sumEntries,
   timeLabel,
 } from "../lib/nutrition";
+import { nutrientReport, targetsFor } from "../lib/nutrients";
 
 // Counts toward the new value instead of jumping to it.
 function AnimatedNumber({ value }) {
@@ -47,6 +49,7 @@ function HomePage() {
   const totals = sumEntries(entries);
   const remaining = Math.round(goals.calories - totals.calories);
   const isToday = date === dateKey();
+  const nutrients = nutrientReport(entries, targetsFor(goals));
 
   const remove = (entry, index) => {
     dispatch({ type: "REMOVE_ENTRY", date, payload: entry.id });
@@ -117,10 +120,9 @@ function HomePage() {
                     <strong>{Math.round(totals[key])}</strong> / {goal} g
                   </span>
                 </div>
-                <div className="bar">
+                <div className="bar" style={{ "--fill": `var(--${key})` }}>
                   <motion.div
                     className="bar-fill"
-                    style={{ background: `var(--${key})` }}
                     initial={{ width: 0 }}
                     animate={{ width: `${pct * 100}%` }}
                     transition={{ type: "spring", bounce: 0, duration: 0.8 }}
@@ -129,6 +131,26 @@ function HomePage() {
               </div>
             );
           })}
+          <Link to="/nutrients" className="score-link">
+            {nutrients.withData > 0 ? (
+              <>
+                <span>Nutrient score</span>
+                <strong>{nutrients.score}</strong>
+              </>
+            ) : (
+              <span>Track vitamins & minerals</span>
+            )}
+            <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+              <path
+                d="M9 5l7 7-7 7"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </Link>
         </div>
       </section>
 
@@ -190,6 +212,11 @@ function HomePage() {
           </ul>
         )}
       </section>
+
+      <div className="habits">
+        <WaterCard date={date} />
+        <SupplementsCard date={date} />
+      </div>
 
       <AddFoodSheet open={adding} onClose={() => setAdding(false)} date={date} />
     </main>

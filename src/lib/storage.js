@@ -1,7 +1,7 @@
 // Where data lives:
 // - Signed out ("guest"): this browser's localStorage.
-// - Signed in: Firestore, under users/{uid} (goals, meals) and
-//   users/{uid}/days/{date} (that day's food entries).
+// - Signed in: Firestore, under users/{uid} (goals, meals, supplements) and
+//   users/{uid}/days/{date} (that day's food entries, water, supplements taken).
 import {
   EmailAuthProvider,
   createUserWithEmailAndPassword,
@@ -19,31 +19,46 @@ import { auth, db } from "../../firebase";
 const GUEST_KEY = "fittrack.data:guest";
 
 export const defaultData = () => ({
-  goals: { calories: 2000, protein: 120, carbs: 220, fat: 65 },
+  goals: { calories: 2000, protein: 120, carbs: 220, fat: 65, water: 2000, nutrients: {} },
   meals: [],
-  logs: {},
+  supplements: [],
+  logs: {}, // date -> food entries
+  water: {}, // date -> ml drunk
+  taken: {}, // date -> ids of supplements taken
 });
+
+const obj = (v) => (v && typeof v === "object" && !Array.isArray(v) ? v : {});
+
+// Fills in anything missing, so data saved by older versions still loads.
+function shape(saved = {}) {
+  const base = defaultData();
+  return {
+    goals: { ...base.goals, ...obj(saved.goals), nutrients: obj(saved.goals?.nutrients) },
+    meals: Array.isArray(saved.meals) ? saved.meals : [],
+    supplements: Array.isArray(saved.supplements) ? saved.supplements : [],
+    logs: obj(saved.logs),
+    water: obj(saved.water),
+    taken: obj(saved.taken),
+  };
+}
 
 /* ---------- Guest data (localStorage) ---------- */
 
 export function loadGuest() {
-  let saved = {};
   try {
-    saved = JSON.parse(localStorage.getItem(GUEST_KEY)) ?? {};
+    return shape(JSON.parse(localStorage.getItem(GUEST_KEY)) ?? {});
   } catch {
     // Unreadable or blocked storage: start from defaults.
+    return defaultData();
   }
-  const base = defaultData();
-  return {
-    goals: { ...base.goals, ...saved.goals },
-    meals: Array.isArray(saved.meals) ? saved.meals : [],
-    logs: saved.logs && typeof saved.logs === "object" ? saved.logs : {},
-  };
 }
 
-export function saveGuest({ goals, meals, logs }) {
+export function saveGuest({ goals, meals, supplements, logs, water, taken }) {
   try {
-    localStorage.setItem(GUEST_KEY, JSON.stringify({ goals, meals, logs }));
+    localStorage.setItem(
+      GUEST_KEY,
+      JSON.stringify({ goals, meals, supplements, logs, water, taken }),
+    );
   } catch {
     // Storage full or blocked: the app keeps working in memory.
   }
@@ -56,17 +71,16 @@ const daysCol = (uid) => collection(db, "users", uid, "days");
 
 export async function loadCloud(uid) {
   const [profile, days] = await Promise.all([getDoc(userDoc(uid)), getDocs(daysCol(uid))]);
-  const base = defaultData();
-  const saved = profile.data() ?? {};
   const logs = {};
+  const water = {};
+  const taken = {};
   days.forEach((day) => {
-    logs[day.id] = day.data().entries ?? [];
+    const d = day.data();
+    if (d.entries?.length) logs[day.id] = d.entries;
+    if (d.water) water[day.id] = d.water;
+    if (d.taken?.length) taken[day.id] = d.taken;
   });
-  return {
-    goals: { ...base.goals, ...saved.goals },
-    meals: Array.isArray(saved.meals) ? saved.meals : [],
-    logs,
-  };
+  return shape({ ...profile.data(), logs, water, taken });
 }
 
 // Writes only what changed between two states, so adding one food
@@ -75,14 +89,30 @@ export async function saveCloud(uid, prev, next) {
   const batch = writeBatch(db);
   let writes = 0;
 
-  if (prev.goals !== next.goals || prev.meals !== next.meals) {
-    batch.set(userDoc(uid), { goals: next.goals, meals: next.meals }, { merge: true });
+  if (["goals", "meals", "supplements"].some((key) => prev[key] !== next[key])) {
+    batch.set(
+      userDoc(uid),
+      { goals: next.goals, meals: next.meals, supplements: next.supplements },
+      { merge: true },
+    );
     writes++;
   }
-  for (const [date, entries] of Object.entries(next.logs)) {
-    if (prev.logs[date] === entries) continue;
+
+  const dates = new Set([
+    ...Object.keys(next.logs),
+    ...Object.keys(next.water),
+    ...Object.keys(next.taken),
+  ]);
+  for (const date of dates) {
+    const same = ["logs", "water", "taken"].every((key) => prev[key]?.[date] === next[key][date]);
+    if (same) continue;
+    const day = {
+      entries: next.logs[date] ?? [],
+      water: next.water[date] ?? 0,
+      taken: next.taken[date] ?? [],
+    };
     const ref = doc(daysCol(uid), date);
-    if (entries.length > 0) batch.set(ref, { entries });
+    if (day.entries.length || day.water || day.taken.length) batch.set(ref, day);
     else batch.delete(ref);
     writes++;
   }

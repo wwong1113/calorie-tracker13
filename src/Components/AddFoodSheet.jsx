@@ -27,6 +27,7 @@ function AddFoodSheet({ open, onClose, date }) {
         protein: num(food.protein),
         carbs: num(food.carbs),
         fat: num(food.fat),
+        nutrients: food.nutrients, // only foods from search carry these
       },
     });
     toast(`Added ${food.name} to ${dayTitle(date).toLowerCase()}`);
